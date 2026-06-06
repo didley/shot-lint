@@ -1,6 +1,6 @@
 {
   "name": "shot-lint",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TypeScript. One way to do everything — rules, safe utils, and agent context in one package.",
   "type": "module",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/didley/shot-lint"
   },
-"exports": {
+  "exports": {
     ".": {
       "import": "./dist/checker/index.js",
       "types": "./dist/checker/index.d.ts"
