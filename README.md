@@ -51,26 +51,26 @@ src/types.ts:8:5:  [require-readonly-property]  Object type properties must be r
 
 ## What changes
 
-**One way to write a function**
+**`null` is the only absent value**
 ```ts
-// ❌ before
-const double = (n: number) => n * 2
-[1,2,3].map(x => x * 2)
+// ❌ before — three ways to say "nothing": undefined, ?, missing
+type User = { id: number; avatar?: string; deletedAt?: Date }
+function findUser(id?: number): User | undefined { ... }
 
-// ✅ after
-function double(n: number): number { return n * 2 }
-[1,2,3].map(function double(n: number): number { return n * 2 })
+// ✅ after — one way; every absence is a deliberate, typed null
+type User = { readonly id: number; readonly avatar: string | null; readonly deletedAt: Date | null }
+function findUser(id: number): [User | null, Error | null] { ... }
 ```
 
 **Errors in the type signature, not the air**
 ```ts
-// ❌ before
+// ❌ before — caller can't see this throws; nothing in the type says so
 async function getUser(id: number): Promise<User> {
     const res = await fetch(`/users/${id}`)
-    return res.json() as User  // throws, casts, lies
+    return res.json() as User
 }
 
-// ✅ after
+// ✅ after — failure is in the return type; the compiler tracks it
 async function getUser(id: number): Promise<[User | null, Error | null]> {
     const [res, fetchErr] = await safeFetch(`/users/${id}`)
     if (fetchErr !== null) { return [null, fetchErr] }
@@ -78,15 +78,15 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 }
 ```
 
-**Types that mean what they say**
+**Immutable by default — no silent mutation**
 ```ts
-// ❌ before
-type Config = { host: string; port?: number }
-function load(input: any): Config { return input as Config }
+// ❌ before — any function can mutate these; nothing stops it
+type Config = { host: string; port: number }
+const ids: number[] = []
 
-// ✅ after
-type Config = { readonly host: string; readonly port: number | null }
-function load(input: unknown): [Config | null, Error | null] { ... }
+// ✅ after — readonly at the type level; the compiler enforces it
+type Config = { readonly host: string; readonly port: number }
+const ids: ReadonlyArray<number> = []
 ```
 
 ## Rules
