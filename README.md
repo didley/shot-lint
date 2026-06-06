@@ -240,29 +240,6 @@ Working projects in [`examples/`](./examples/):
 | [`fetch-user`](./examples/fetch-user/) | `safeFetch` + `jsonParse` error chain |
 | [`calculator`](./examples/calculator/) | `Result<T>` tuple returns |
 
-## Ecosystem
-
-```mermaid
-graph TD
-    SL["**ShotLint**  ·  github.com/didley/shot-lint\n──────────────────────────────────\nStrict linting for any TypeScript project\n• 90+ AST rules · standalone CLI · npm\n• No Deno required\n• Runtime utils — jsonParse, safeFetch, toResult, toPromiseResult"]
-
-    SS["**ShotScript**  ·  github.com/didley/ShotScript\n──────────────────────────────────\nThe full opinionated lint toolchain\n• .shot files · Shot CLI · Deno runtime\n• shot:std standard library · import allowlist\n• Locked tsconfig — no user overrides"]
-
-    TS["**Your TypeScript project**\n(any runtime · any framework)"]
-
-    SP["**Your ShotScript project**\n──────────────────────────────────\nZero-throw guarantee — every failure path is in the type\n• No any · no class · no undefined · no escape hatches\n• LLM-friendly: one form per construct, every time\n• Code your whole team can read on first glance"]
-
-    REG["**ShotScript Registry**  ·  planned\n──────────────────────────────────\nA package registry for the Shot ecosystem\n• Native .shot packages with full type guarantees\n• npm packages wrapped in error-tuple handlers\n• Every import returns  T | null, Error | null  — no surprises"]
-
-    SL -->|"embedded as lint/ submodule"| SS
-    SS -->|"shot check calls ShotLint checker"| SL
-    SL -->|"npx shot-lint 'src/**/*.ts'"| TS
-    SS -->|"shot run / check / build / test"| SP
-    REG -->|"shot add"| SP
-
-    style REG stroke-dasharray: 5 5
-```
-
 ## Replacing existing tools
 
 shot-lint replaces ESLint entirely, and replaces the linter portion of Biome or Deno's built-in lint. Keep whichever formatter you prefer.
