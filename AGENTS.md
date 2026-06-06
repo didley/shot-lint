@@ -270,10 +270,10 @@ type Status = typeof Status[keyof typeof Status]
 // ❌
 type Tagged = Base & { readonly tag: string }
 
-// ✅
-type Tagged = { readonly id: string; readonly name: string; readonly tag: string }
-// or compose by value:
+// ✅ — embed as a named field (preferred)
 type Tagged = { readonly base: Base; readonly tag: string }
+// or spell out fields if Base is trivial / you own both types
+type Tagged = { readonly id: string; readonly name: string; readonly tag: string }
 ```
 
 **Banned utility types: `Partial`, `Required`, `Record`, `Readonly` (wrapper form), `InstanceType`, `ConstructorParameters`, `ThisType`.**
