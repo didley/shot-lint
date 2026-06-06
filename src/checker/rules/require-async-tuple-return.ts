@@ -14,6 +14,7 @@ function containsNull(typeNode: ts.TypeNode): boolean {
 //   Promise<void>                          — side-effect async, no meaningful return
 //   Promise<never>                         — function that never resolves
 //   Promise<[T | null, E | null]>          — standard tuple (second element nullable)
+//   Promise<Result<T>>                     — Result<T> alias for the tuple
 //   ShotPromise<T> / ShotPromise<T, E>     — canonical alias
 function isValidAsyncReturn(typeNode: ts.TypeNode): boolean {
     if (!ts.isTypeReferenceNode(typeNode)) return false
@@ -30,6 +31,8 @@ function isValidAsyncReturn(typeNode: ts.TypeNode): boolean {
 
     if (inner.kind === ts.SyntaxKind.VoidKeyword) return true
     if (inner.kind === ts.SyntaxKind.NeverKeyword) return true
+
+    if (ts.isTypeReferenceNode(inner) && ts.isIdentifier(inner.typeName) && inner.typeName.text === "Result") return true
 
     if (!ts.isTupleTypeNode(inner)) return false
     if (inner.elements.length !== 2) return false
