@@ -84,17 +84,17 @@ type User = { readonly id: number; readonly avatar: string | null; readonly dele
 function findUser(id: number): [User | null, Error | null] { ... }
 ```
 
-**No complex types — types are shapes, not programs**
+**No complex types — compose, don't extend**
 ```ts
-// ❌ before — type-level programs that require knowing advanced TS to read
-type Flatten<T> = T extends Array<infer U> ? U : T
-type Merged = UserBase & UserProfile & { readonly role: string }
-type ReadonlyRecord<K extends string, V> = { readonly [P in K]: V }
+// ❌ before — intersection to "extend" a base type
+type User = { readonly id: number; readonly name: string }
+type AdminUser = User & { readonly role: 'admin' }
 
-// ✅ after — types are plain shapes; readable at a glance
-type FlatItem = string | number
-type User = { readonly id: number; readonly name: string; readonly role: string }
-type Config = { readonly [key: string]: string }
+// ✅ after — embed as a named field (Go/Rust-style composition)
+type User = { readonly id: number; readonly name: string }
+type AdminUser = { readonly user: User; readonly role: 'admin' }
+
+// access: admin.user.id  not  admin.id
 ```
 
 **Immutable by default**
